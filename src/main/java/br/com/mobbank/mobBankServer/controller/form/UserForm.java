@@ -11,7 +11,9 @@ public class UserForm {
 	@NotNull @NotEmpty @Length(min = 5)
 	private String nome;
 	@NotNull @NotEmpty @Length(min = 10)
-	private String email;	
+	private String email;
+	@NotNull @NotEmpty
+	private String senha;	
 	
 	public String getNome() {
 		return nome;
@@ -29,8 +31,16 @@ public class UserForm {
 		this.email = email;
 	}
 
+	public String getSenha() {
+		return senha;
+	}
+
+	public void setSenha(String senha) {
+		this.senha = senha;
+	}
+
 	public User converter() {
-		return new User(this.nome, this.email);
+		return new User(this.nome, this.email, this.senha);
 	}
 	
 }

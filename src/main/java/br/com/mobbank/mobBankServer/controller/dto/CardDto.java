@@ -13,6 +13,8 @@ public class CardDto {
 	private LocalDateTime dataExpiracao;
 	private String numeroConta;
 	private User ownerId;
+	private double saldo;
+	
 	
 	public CardDto(Card card) {
 		this.id = card.getId();
@@ -20,6 +22,7 @@ public class CardDto {
 		this.dataExpiracao = card.getDataExpiracao();
 		this.numeroConta = card.getNumeroConta();
 		this.ownerId = card.getOwner();
+		this.saldo = card.getSaldo();
 	}
 
 	public Long getId() {
@@ -40,6 +43,10 @@ public class CardDto {
 
 	public User getOwnerId() {
 		return ownerId;
+	}
+	
+	public double getSaldo() {
+		return saldo;
 	}
 	
 	public static List<CardDto> converter(List<Card> cards) {

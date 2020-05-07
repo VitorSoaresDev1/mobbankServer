@@ -18,9 +18,10 @@ public class User {
 	
 	public User() {};
 	
-	public User(String nome, String email) {
+	public User(String nome, String email, String senha) {
 		this.nome = nome;
 		this.email = email;
+		this.senha = senha;
 	}
 	
 	public User(Optional<User> option) {
