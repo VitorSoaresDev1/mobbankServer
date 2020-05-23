@@ -8,18 +8,18 @@ import br.com.mobbank.mobBankServer.model.Card;
 import br.com.mobbank.mobBankServer.model.Deposit;
 
 public class DepositDto {
-	private Card card;
+	private int cardId;
 	private LocalDateTime dataRealizacao = LocalDateTime.now();
 	private double value;
 	
 	public DepositDto(Deposit deposit) {
-		this.card = deposit.getCard();
+		this.cardId = deposit.getCardId();
 		this.dataRealizacao = deposit.getDataRealizacao();
 		this.value = deposit.getValue();
 	}
 
-	public Card getCard() {
-		return card;
+	public int getCardId() {
+		return cardId;
 	}
 
 	public LocalDateTime getDataRealizacao() {

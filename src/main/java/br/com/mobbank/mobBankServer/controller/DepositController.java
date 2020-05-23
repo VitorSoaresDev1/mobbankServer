@@ -1,56 +1,73 @@
 package br.com.mobbank.mobBankServer.controller;
-import java.net.URI;
-import java.util.List;
-import java.util.Optional;
-
-import javax.transaction.Transactional;
-import javax.validation.Valid;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.util.UriComponentsBuilder;
 
 import br.com.mobbank.mobBankServer.controller.dto.DepositDto;
 import br.com.mobbank.mobBankServer.controller.form.DepositForm;
+import br.com.mobbank.mobBankServer.model.Card;
 import br.com.mobbank.mobBankServer.model.Deposit;
+import br.com.mobbank.mobBankServer.repository.CardRepository;
 import br.com.mobbank.mobBankServer.repository.DepositRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.util.UriComponentsBuilder;
+
+import javax.transaction.Transactional;
+import javax.validation.Valid;
+import java.net.URI;
+import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/deposits")
 public class DepositController {
 	@Autowired
 	private DepositRepository depositRepository;
+	@Autowired
+	private CardRepository cardRepository;
 	
 	@GetMapping
-	public List<DepositDto> lista() {
+	public List<DepositDto> listar() {
 		List<Deposit> deposits = depositRepository.findAll();
 		return DepositDto.converter(deposits);			
 	}
 	
 	@GetMapping("/{id}")
 	public ResponseEntity<List<DepositDto>> detalhar(@PathVariable Long id) {
-		Optional<List<Deposit>> deposits = depositRepository.findByOwner_id(id);
-		if(deposits.isPresent()) {
-			
-			return ResponseEntity.ok(DepositDto.converter(deposits.get()));
-		}
-		return ResponseEntity.notFound().build();
+		Optional<List<Deposit>> deposits = depositRepository.findByCardId(Math.toIntExact(id));
+		return deposits.map(depositList -> ResponseEntity.ok(DepositDto.converter(depositList))).orElseGet(() -> ResponseEntity.notFound().build());
 	}
 	
 	@PostMapping
 	@Transactional
 	public ResponseEntity<DepositDto> cadastrar(@RequestBody @Valid DepositForm form, UriComponentsBuilder uriBuilder) {
-		if(form.getSenha() == form.getOwner().getSenha()) {
-			Deposit deposit = form.converter();
-			depositRepository.save(deposit);
-			URI uri = uriBuilder.path("/deposits/{id}").buildAndExpand(deposit.getId()).toUri();
-			return ResponseEntity.created(uri).body(new DepositDto(deposit));			
+		Optional<Card> card = cardRepository.findById(Long.parseLong(Integer.toString(form.getCardId())));
+		if(card.isPresent()){
+			String userPass = card.get().getUser().getSenha();
+			if (form.getSenha().equals(userPass)) {
+				if(form.getTipo() == 1) {
+					Deposit deposit = form.converter();
+					double newSaldo = (card.get().getSaldo()) + (form.getValue());
+					card.get().setSaldo(newSaldo);
+					depositRepository.save(deposit);
+					URI uri = uriBuilder.path("/deposits/{id}").buildAndExpand(deposit.getId()).toUri();
+					return ResponseEntity.created(uri).body(new DepositDto(deposit));
+				}else if(form.getTipo() == 2){
+					Deposit deposit = form.converter();
+					double newSaldo = (card.get().getSaldo()) - (form.getValue());
+					card.get().setSaldo(newSaldo);
+					depositRepository.save(deposit);
+					URI uri = uriBuilder.path("/deposits/{id}").buildAndExpand(deposit.getId()).toUri();
+					return ResponseEntity.created(uri).body(new DepositDto(deposit));
+				}else if(form.getTipo() == 3){
+					//TODO transferencia
+					return ResponseEntity.badRequest().build();
+				}else{
+					return ResponseEntity.badRequest().build();
+				}
+			} else {
+				return new ResponseEntity(HttpStatus.UNAUTHORIZED);
+			}
 		}else {
 			return ResponseEntity.badRequest().build();
 		}

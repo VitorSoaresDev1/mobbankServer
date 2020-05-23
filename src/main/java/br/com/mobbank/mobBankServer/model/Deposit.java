@@ -1,6 +1,7 @@
 package br.com.mobbank.mobBankServer.model;
 
 import java.time.LocalDateTime;
+import java.util.Objects;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
@@ -14,20 +15,20 @@ public class Deposit {
 	@Id @GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 	private String uuid;
-	@ManyToOne(cascade = {CascadeType.ALL})
-	private User owner;
-	@ManyToOne(cascade = {CascadeType.ALL})
-	private Card card;
+	private int cardId;
+	private int transferTo;
+	private int tipo;
 	private LocalDateTime dataRealizacao = LocalDateTime.now();
 	private double value;
 	
 	public Deposit() {
 	}
 
-	public Deposit(String uuid,Card card,User owner,double value) {
+	public Deposit(String uuid,int cardId, int transferTo, int tipo ,double value) {
 		this.uuid  = uuid;
-		this.card  = card;
-		this.owner = owner;
+		this.cardId  = cardId;
+		this.transferTo = transferTo;
+		this.tipo = tipo;
 		this.value = value;
 	}
 
@@ -47,20 +48,12 @@ public class Deposit {
 		this.uuid = uuid;
 	}
 
-	public User getOwner() {
-		return owner;
+	public int getCardId() {
+		return cardId;
 	}
 
-	public void setOwner(User owner) {
-		this.owner = owner;
-	}
-
-	public Card getCard() {
-		return card;
-	}
-
-	public void setCard(Card card) {
-		this.card = card;
+	public void setCardId(int cardId) {
+		this.cardId = cardId;
 	}
 
 	public LocalDateTime getDataRealizacao() {
@@ -79,57 +72,43 @@ public class Deposit {
 		this.value = value;
 	}
 
+	public int getTransferTo() {return transferTo;}
+
+	public void setTransferTo(int transferTo) {this.transferTo = transferTo;}
+
+	public int getTipo() {return tipo;}
+
+	public void setTipo(int tipo) {this.tipo = tipo;}
+
 	@Override
-	public int hashCode() {
-		final int prime = 31;
-		int result = 1;
-		result = prime * result + ((card == null) ? 0 : card.hashCode());
-		result = prime * result + ((dataRealizacao == null) ? 0 : dataRealizacao.hashCode());
-		result = prime * result + ((id == null) ? 0 : id.hashCode());
-		result = prime * result + ((owner == null) ? 0 : owner.hashCode());
-		long temp;
-		temp = Double.doubleToLongBits(value);
-		result = prime * result + (int) (temp ^ (temp >>> 32));
-		return result;
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
+		Deposit deposit = (Deposit) o;
+		return cardId == deposit.cardId &&
+				transferTo == deposit.transferTo &&
+				tipo == deposit.tipo &&
+				Double.compare(deposit.value, value) == 0 &&
+				Objects.equals(id, deposit.id) &&
+				Objects.equals(uuid, deposit.uuid) &&
+				Objects.equals(dataRealizacao, deposit.dataRealizacao);
 	}
 
 	@Override
-	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		Deposit other = (Deposit) obj;
-		if (card == null) {
-			if (other.card != null)
-				return false;
-		} else if (!card.equals(other.card))
-			return false;
-		if (dataRealizacao == null) {
-			if (other.dataRealizacao != null)
-				return false;
-		} else if (!dataRealizacao.equals(other.dataRealizacao))
-			return false;
-		if (id == null) {
-			if (other.id != null)
-				return false;
-		} else if (!id.equals(other.id))
-			return false;
-		if (owner == null) {
-			if (other.owner != null)
-				return false;
-		} else if (!owner.equals(other.owner))
-			return false;
-		if (Double.doubleToLongBits(value) != Double.doubleToLongBits(other.value))
-			return false;
-		return true;
+	public int hashCode() {
+		return Objects.hash(id, uuid, cardId, transferTo, tipo, dataRealizacao, value);
 	}
 
 	@Override
 	public String toString() {
-		return "Deposit [id=" + id + ", owner=" + owner + ", card=" + card + ", dataRealizacao=" + dataRealizacao
-				+ ", value=" + value + "]";
+		return "Deposit{" +
+				"id=" + id +
+				", uuid='" + uuid + '\'' +
+				", cardId=" + cardId +
+				", transferTo=" + transferTo +
+				", tipo=" + tipo +
+				", dataRealizacao=" + dataRealizacao +
+				", value=" + value +
+				'}';
 	}
 }

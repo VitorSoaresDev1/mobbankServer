@@ -9,6 +9,6 @@ import br.com.mobbank.mobBankServer.model.Card;
 
 public interface CardRepository extends JpaRepository<Card, Long>{
 
-	Optional<List<Card>> findByOwner_id(Long id);
+	Optional<List<Card>> findByUser_id(Long id);
 
 }

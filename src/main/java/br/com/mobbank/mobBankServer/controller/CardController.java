@@ -51,13 +51,13 @@ public class CardController {
 			e.printStackTrace();
 		}
 		cardRepository.save(card);
-		URI uri = uriBuilder.path("/users/{id}").buildAndExpand(card.getId()).toUri();
+		URI uri = uriBuilder.path("/cards/{id}").buildAndExpand(card.getId()).toUri();
 		return ResponseEntity.created(uri).body(new CardDto(card));
 	}
 	
 	@GetMapping("/{id}")
 	public ResponseEntity<List<CardDto>> detalhar(@PathVariable Long id) {
-		Optional<List<Card>> cards = cardRepository.findByOwner_id(id);
+		Optional<List<Card>> cards = cardRepository.findByUser_id(id);
 		if(cards.isPresent()) {
 			
 			return ResponseEntity.ok(CardDto.converter(cards.get()));

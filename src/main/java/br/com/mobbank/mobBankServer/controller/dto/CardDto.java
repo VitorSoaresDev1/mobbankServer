@@ -21,7 +21,7 @@ public class CardDto {
 		this.dataCriacao = card.getDataCriacao();
 		this.dataExpiracao = card.getDataExpiracao();
 		this.numeroConta = card.getNumeroConta();
-		this.ownerId = card.getOwner();
+		this.ownerId = card.getUser();
 		this.saldo = card.getSaldo();
 	}
 

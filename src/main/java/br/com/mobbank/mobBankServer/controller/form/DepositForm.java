@@ -10,14 +10,15 @@ import br.com.mobbank.mobBankServer.model.Deposit;
 import br.com.mobbank.mobBankServer.model.User;
 
 public class DepositForm {
-	@NotNull @NotEmpty @Length(min = 5)
+	@NotNull @Length(min = 5)
 	private String uuid;
-	@NotNull @NotEmpty
-	private Card card;
-	@NotNull @NotEmpty
-	private User owner;
-	@NotNull @NotEmpty
+	@NotNull
+	private int cardId;
+	@NotNull
 	private double value;
+	@NotNull
+	private int tipo;
+	private int transferTo;
 	@NotNull @NotEmpty
 	private String senha;
 	
@@ -27,17 +28,11 @@ public class DepositForm {
 	public void setUuid(String uuid) {
 		this.uuid = uuid;
 	}
-	public Card getCard() {
-		return card;
+	public int getCardId() {
+		return cardId;
 	}
-	public void setCard(Card card) {
-		this.card = card;
-	}
-	public User getOwner() {
-		return owner;
-	}
-	public void setOwner(User owner) {
-		this.owner = owner;
+	public void setCardId(int cardId) {
+		this.cardId = cardId;
 	}
 	public double getValue() {
 		return value;
@@ -51,8 +46,14 @@ public class DepositForm {
 	public void setSenha(String senha) {
 		this.senha = senha;
 	}
-	
-	public Deposit converter() {
-		return new Deposit(this.uuid, this.card, this.owner, this.value);
-	}
+
+	public int getTipo() {return tipo;}
+
+	public void setTipo(int tipo) {this.tipo = tipo;}
+
+	public int getTransferTo() {return transferTo;}
+
+	public void setTransferTo(int transferTo) {this.transferTo = transferTo;}
+
+	public Deposit converter() {return new Deposit(this.uuid, this.cardId,this.transferTo,this.tipo, this.value);}
 }

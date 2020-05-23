@@ -38,7 +38,7 @@ public class UpdateCardForm {
 		Card card = cardRepository.getOne(id);
 		card.setId(this.id);
 		card.setNumeroConta(this.numeroConta);
-		card.setOwner(this.ownerId);
+		card.setUser(this.ownerId);
 		card.setSaldo(this.saldo);
 		return card;
 	}

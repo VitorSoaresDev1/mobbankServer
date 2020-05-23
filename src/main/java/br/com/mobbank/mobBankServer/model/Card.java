@@ -17,7 +17,7 @@ public class Card {
 	@GeneratedValue(strategy = GenerationType.SEQUENCE)
 	private String numeroConta;
 	@ManyToOne(cascade = {CascadeType.ALL})
-	private User owner;
+	private User user;
 	private LocalDateTime dataCriacao = LocalDateTime.now();
 	private LocalDateTime dataExpiracao = LocalDateTime.now().plusYears(4);
 	private double saldo;
@@ -28,12 +28,12 @@ public class Card {
 	
 	public Card( String numeroConta, Optional<User> option, double saldo) {
 		this.numeroConta = numeroConta;
-		this.owner = option.get();
+		this.user = option.get();
 		this.saldo = saldo;
 	}
 	public Card( String numeroConta, User user, double saldo) {
 		this.numeroConta = numeroConta;
-		this.owner = user;
+		this.user = user;
 		this.saldo = saldo;
 	}
 
@@ -58,13 +58,13 @@ public class Card {
 	}
 
 
-	public User getOwner() {
-		return owner;
+	public User getUser() {
+		return user;
 	}
 
 
-	public void setOwner(User owner) {
-		this.owner = owner;
+	public void setUser(User user) {
+		this.user = user;
 	}
 
 
@@ -99,7 +99,7 @@ public class Card {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((owner == null) ? 0 : owner.hashCode());
+		result = prime * result + ((user == null) ? 0 : user.hashCode());
 		result = prime * result + ((dataCriacao == null) ? 0 : dataCriacao.hashCode());
 		result = prime * result + ((dataExpiracao == null) ? 0 : dataExpiracao.hashCode());
 		result = prime * result + ((id == null) ? 0 : id.hashCode());
@@ -117,10 +117,10 @@ public class Card {
 		if (getClass() != obj.getClass())
 			return false;
 		Card other = (Card) obj;
-		if (owner == null) {
-			if (other.owner != null)
+		if (user == null) {
+			if (other.user != null)
 				return false;
-		} else if (!owner.equals(other.owner))
+		} else if (!user.equals(other.user))
 			return false;
 		if (dataCriacao == null) {
 			if (other.dataCriacao != null)
@@ -148,7 +148,7 @@ public class Card {
 
 	@Override
 	public String toString() {
-		return "Cartao [numeroConta=" + numeroConta + ", Owner=" + owner + ", dataCriacao=" + dataCriacao
+		return "Cartao [numeroConta=" + numeroConta + ", Owner=" + user + ", dataCriacao=" + dataCriacao
 				+ ", dataExpiracao=" + dataExpiracao + "]";
 	}
 	
