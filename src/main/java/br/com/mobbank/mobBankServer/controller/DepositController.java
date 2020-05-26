@@ -60,8 +60,19 @@ public class DepositController {
 					URI uri = uriBuilder.path("/deposits/{id}").buildAndExpand(deposit.getId()).toUri();
 					return ResponseEntity.created(uri).body(new DepositDto(deposit));
 				}else if(form.getTipo() == 3){
-					//TODO transferencia
-					return ResponseEntity.badRequest().build();
+					Optional<Card> destiny = cardRepository.findByNumeroConta(Integer.toString(form.getTransferTo()));
+					if(destiny.isPresent()){
+						Deposit deposit = form.converter();
+						double newSaldo = (card.get().getSaldo()) - (form.getValue());
+						double destinyNewSaldo = (destiny.get().getSaldo()) + (form.getValue());
+						card.get().setSaldo(newSaldo);
+						destiny.get().setSaldo(destinyNewSaldo);
+						depositRepository.save(deposit);
+						URI uri = uriBuilder.path("/deposits/{id}").buildAndExpand(deposit.getId()).toUri();
+						return ResponseEntity.created(uri).body(new DepositDto(deposit));
+					}else{
+						return new ResponseEntity("Conta destino não encontrada",HttpStatus.NOT_FOUND);
+					}
 				}else{
 					return ResponseEntity.badRequest().build();
 				}

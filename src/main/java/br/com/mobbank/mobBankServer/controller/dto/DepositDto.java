@@ -11,11 +11,13 @@ public class DepositDto {
 	private int cardId;
 	private LocalDateTime dataRealizacao = LocalDateTime.now();
 	private double value;
+	private int tipo;
 	
 	public DepositDto(Deposit deposit) {
 		this.cardId = deposit.getCardId();
 		this.dataRealizacao = deposit.getDataRealizacao();
 		this.value = deposit.getValue();
+		this.tipo = deposit.getTipo();
 	}
 
 	public int getCardId() {
@@ -29,7 +31,9 @@ public class DepositDto {
 	public double getValue() {
 		return value;
 	}
-	
+
+	public int getTipo() {return tipo;}
+
 	public static List<DepositDto> converter(List<Deposit> deposits) {
 		return deposits.stream().map(DepositDto::new).collect(Collectors.toList());
 	}
