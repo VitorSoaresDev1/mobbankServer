@@ -37,6 +37,11 @@ public class DepositController {
 		Optional<List<Deposit>> deposits = depositRepository.findByCardId(Math.toIntExact(id));
 		return deposits.map(depositList -> ResponseEntity.ok(DepositDto.converter(depositList))).orElseGet(() -> ResponseEntity.notFound().build());
 	}
+    @GetMapping("/incomes/{transferTo}")
+    public ResponseEntity<List<DepositDto>> detalhar(@PathVariable int transferTo) {
+        Optional<List<Deposit>> deposits = depositRepository.findByTransferTo(transferTo);
+        return deposits.map(depositList -> ResponseEntity.ok(DepositDto.converter(depositList))).orElseGet(() -> ResponseEntity.notFound().build());
+    }
 	
 	@PostMapping
 	@Transactional

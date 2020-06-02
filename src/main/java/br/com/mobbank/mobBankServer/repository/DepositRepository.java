@@ -9,4 +9,5 @@ import br.com.mobbank.mobBankServer.model.Deposit;
 
 public interface DepositRepository extends JpaRepository<Deposit, Long>{
 	Optional<List<Deposit>> findByCardId(int id);
+	Optional<List<Deposit>> findByTransferTo(int id);
 }
